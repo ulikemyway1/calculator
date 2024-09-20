@@ -4,13 +4,12 @@ export default function calculate(exp) {
   const stack = [];
   let currentNumber = '';
   let currentOperator = null;
-
   let i = 0;
-
   const expression = exp.replace(/,/g, '.');
 
   while (i < expression.length) {
     const char = expression[i];
+    let num;
 
     if (!Number.isNaN(Number(char)) || char === '.') {
       currentNumber += char;
@@ -21,7 +20,7 @@ export default function calculate(exp) {
       i === expression.length - 1
     ) {
       if (currentNumber) {
-        const num = parseFloat(currentNumber);
+        num = parseFloat(currentNumber);
 
         if (currentOperator) {
           switch (currentOperator) {
@@ -37,9 +36,7 @@ export default function calculate(exp) {
             case textRepresentation.division:
               stack.push(stack.pop() / num);
               break;
-            case textRepresentation.percent:
-              stack.push(stack.pop() * (num / 100));
-              break;
+
             default:
               break;
           }
@@ -54,14 +51,22 @@ export default function calculate(exp) {
         char === textRepresentation.plus ||
         char === textRepresentation.minus ||
         char === textRepresentation.multiplication ||
-        char === textRepresentation.division ||
-        char === textRepresentation.percent
+        char === textRepresentation.division
       ) {
         currentOperator = char;
+      } else if (char === textRepresentation.percent) {
+        stack.pop();
+        const prev = stack.pop();
+        if (prev) {
+          stack.push(prev + prev * (num / 100));
+        } else {
+          stack.push(num / 100);
+        }
       }
     }
 
     i += 1;
   }
+
   return stack.reduce((a, b) => a + b, 0);
 }

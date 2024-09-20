@@ -20,7 +20,7 @@ export default function recursiveCalculation(expression) {
     const innerResult = calculate(innerExpression);
     const nextResult = [
       ...arr.slice(0, left),
-      ...innerResult.toString().split(''),
+      ...innerResult.toString(),
       ...arr.slice(right + 1),
     ];
 
