@@ -1,3 +1,16 @@
+const textRepresentation = {
+  plus: '+',
+  minus: '-',
+  division: '÷',
+  multiplication: '×',
+  percent: '%',
+  evaluation: '=',
+  delete: 'AC',
+  invert: '±',
+  comma: ',',
+  leftParenthesis: '(',
+  rightParenthesis: ')',
+};
 const buttonsSet = [
   {
     textContent: '0',
@@ -50,50 +63,60 @@ const buttonsSet = [
     role: 'number',
   },
   {
-    textContent: '-',
+    textContent: textRepresentation.minus,
     value: null,
     role: 'minus',
   },
   {
-    textContent: '+',
+    textContent: textRepresentation.plus,
     value: null,
     role: 'plus',
   },
   {
-    textContent: '÷',
+    textContent: textRepresentation.division,
     value: null,
     role: 'division',
   },
   {
-    textContent: '×',
+    textContent: textRepresentation.multiplication,
     value: null,
     role: 'multiplication',
   },
   {
-    textContent: '%',
+    textContent: textRepresentation.percent,
     value: null,
     role: 'percent',
   },
   {
-    textContent: '=',
+    textContent: textRepresentation.evaluation,
     value: null,
     role: 'evaluation',
   },
   {
-    textContent: 'AC',
+    textContent: textRepresentation.delete,
     value: null,
     role: 'delete',
   },
   {
-    textContent: '±',
+    textContent: textRepresentation.invert,
     value: null,
     role: 'invert',
   },
   {
-    textContent: ',',
+    textContent: textRepresentation.comma,
     value: null,
     role: 'comma',
   },
+  {
+    textContent: textRepresentation.leftParenthesis,
+    value: null,
+    role: 'separator-left',
+  },
+  {
+    textContent: textRepresentation.rightParenthesis,
+    value: null,
+    role: 'separator-right',
+  },
 ];
 
-export default buttonsSet;
+export { textRepresentation, buttonsSet };

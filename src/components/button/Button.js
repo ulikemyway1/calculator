@@ -8,8 +8,10 @@ export default class Button {
       classList: ['calculator__button'],
       textContent,
     });
+
     this.buttonView.style.gridArea = `${role}${value ? `-${value}` : ''}`;
-    this.button = { value, role };
+
+    this.button = { value, role, textContent };
   }
 
   getButtonView() {
@@ -23,4 +25,13 @@ export default class Button {
   getValue() {
     return this.button.value;
   }
+
+  subscribe = (target) => {
+    const buttonEvent = new CustomEvent('inputChanged', {
+      detail: this.button,
+    });
+    this.buttonView.addEventListener('click', () =>
+      target.dispatchEvent(buttonEvent)
+    );
+  };
 }
