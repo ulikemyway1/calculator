@@ -1,0 +1,16 @@
+@import url('./_fonts.scss');
+@import url('./_colors.scss');
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  min-height: 100dvh;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins', 'Arial', sans-serif;
+  color: var(--green-btn);
+}
