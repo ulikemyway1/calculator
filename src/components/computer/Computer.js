@@ -87,9 +87,11 @@ export default class Computer {
       this._charIsNumber(lastElement) ||
       lastElement === textRepresentation.minus
     ) {
-      if (!(isMinusNow && lastElement !== textRepresentation.minus))
+      if (!(isMinusNow && lastElement !== textRepresentation.minus)) {
         lastNumberChars.push(lastElement);
-
+      } else if (isMinusNow && this._charIsNumber(lastElement)) {
+        break;
+      }
       isMinusNow = lastElement === textRepresentation.minus;
       j += 1;
       lastElement = this.expression[this.expression.length - j];
@@ -97,9 +99,15 @@ export default class Computer {
 
     lastElement = lastNumberChars.reverse().join('');
 
-    this._deleteSomeLastChars(lastElement.length);
+    this._deleteSomeLastChars(lastNumberChars.length);
 
     const invertedChar = Number(lastElement) * -1;
+
+    if (
+      invertedChar >= 0 &&
+      this.expression[this.expression.length - 1] !== textRepresentation.plus
+    )
+      this._pushCharInCalculatorMemory(textRepresentation.plus);
     this._recalculateWithNewChar(invertedChar);
   };
 
