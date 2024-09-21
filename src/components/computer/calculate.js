@@ -5,6 +5,7 @@ export default function calculate(exp) {
   let currentNumber = '';
   let currentOperator = null;
   let i = 0;
+  let befotePercent = null;
   const expression = exp.replace(/,/g, '.');
 
   while (i < expression.length) {
@@ -54,11 +55,13 @@ export default function calculate(exp) {
         char === textRepresentation.division
       ) {
         currentOperator = char;
+
+        befotePercent = stack[stack.length - 1];
       } else if (char === textRepresentation.percent) {
         stack.pop();
-        const prev = stack.pop();
-        if (prev) {
-          stack.push(prev + prev * (num / 100));
+
+        if (befotePercent) {
+          stack.push(befotePercent * (num / 100));
         } else {
           stack.push(num / 100);
         }

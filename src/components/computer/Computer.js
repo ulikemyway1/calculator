@@ -1,45 +1,107 @@
 import recursiveCalculation from './recursiveCalculation';
+import { textRepresentation } from '../button/buttonsSet';
 
 export default class Computer {
   constructor({ input, outputExpression, outputResult }) {
-    this.current = 0;
     this.result = [];
     this.expression = [];
-    this.input = input;
-    this.outputExpression = outputExpression;
-    this.outputResult = outputResult;
-
-    this.input.addEventListener('inputChanged', (e) => {
+    this.inputStream = input;
+    this.outputExpressionStream = outputExpression;
+    this.outputResultStream = outputResult;
+    this.inputStream.addEventListener('inputChanged', (e) => {
       this.processInput(e.detail);
     });
   }
 
   processInput = (data) => {
-    let fullExpression;
-
-    if (data.role === 'delete') {
-      this.expression.pop();
-    } else if (data.role === 'evaluation') {
-      fullExpression = this.expression.join('');
-      this.outputExpression(recursiveCalculation(fullExpression));
-      this.outputResult(null);
-      this.expression = [];
-      return;
-    } else {
-      this.expression.push(data.textContent);
+    switch (data.role) {
+      case 'delete':
+        this._deleteLastCharFromExpression();
+        break;
+      case 'evaluation':
+        this._showFinalResult();
+        break;
+      case 'invert':
+        this._invertNumberSign();
+        break;
+      default:
+        this._recalculateWithNewChar(data.textContent);
     }
-
-    fullExpression = this.expression.join('');
-
-    this.outputExpression(fullExpression);
-    this.outputResult(recursiveCalculation(fullExpression));
   };
 
   getResult() {
     return this.result.reduceuce((a, b) => a + b);
   }
 
-  processPlusOperation = () => {
+  _processPlusOperation = () => {
     this.result.push(+this.expression.join(''));
+  };
+
+  _normalizeExpression = (expression) =>
+    expression
+      .replaceAll(')(', `)${textRepresentation.multiplication}()`)
+      .replaceAll(/(\d|\))\(/g, `$1${textRepresentation.multiplication}(`)
+      .replaceAll('()', '');
+
+  _getAndDeleteCharFromMemory = () => {
+    this.expression.pop();
+  };
+
+  _showFinalResult = () => {
+    const fullExpression = this._normalizeExpression(this.expression.join(''));
+    this.outputExpressionStream(
+      recursiveCalculation(fullExpression).toFixed(2)
+    );
+    this.outputResultStream(null);
+    this._resetCalculatorMemory();
+  };
+
+  _resetCalculatorMemory = () => {
+    this.expression = [];
+  };
+
+  _pushCharInCalculatorMemory = (char) => this.expression.push(char);
+
+  _invertNumberSign = () => {
+    const lastNumberChars = [];
+
+    let j = 1;
+    let lastElement = this.expression[this.expression.length - j];
+
+    while (!Number.isNaN(Number(lastElement))) {
+      lastNumberChars.push(lastElement);
+      j += 1;
+
+      lastElement = this.expression[this.expression.length - j];
+    }
+
+    j = 1;
+    lastElement = lastNumberChars.reverse().join('');
+
+    for (let i = 0; i < lastElement.length; i += 1) {
+      this._deleteLastCharFromExpression();
+    }
+    this._pushCharInCalculatorMemory(Number(lastElement) * -1);
+    this._recalculateWithNewChar(null);
+  };
+
+  _displayCurrentExpression = (exp) => {
+    this.outputExpressionStream(exp);
+  };
+
+  _displayCurrentResult = (exp) => {
+    this.outputResultStream(recursiveCalculation(exp)?.toPrecision(3));
+  };
+
+  _recalculateWithNewChar = (char) => {
+    if (char) this._pushCharInCalculatorMemory(char);
+    const fullExpression = this._normalizeExpression(this.expression.join(''));
+    this._displayCurrentExpression(fullExpression);
+    this._displayCurrentResult(fullExpression);
+  };
+
+  _deleteLastCharFromExpression = () => {
+    this._getAndDeleteCharFromMemory();
+    this._recalculateWithNewChar(null);
   };
 }
