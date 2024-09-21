@@ -183,19 +183,29 @@ export default class Computer {
     this._recalculateWithNewChar(null);
   };
 
-  _isChangingOperatorProcess = (prevChar, newCharInfo) =>
-    prevChar &&
-    !this._charIsNumber(prevChar) &&
-    newCharInfo.role !== 'number' &&
-    newCharInfo.role !== 'delete' &&
-    newCharInfo.role !== 'evaluation' &&
-    newCharInfo.role !== 'separator-left' &&
-    newCharInfo.role !== 'separator-right' &&
-    prevChar !== textRepresentation.percent &&
-    prevChar !== textRepresentation.delete &&
-    prevChar !== textRepresentation.leftParenthesis &&
-    prevChar !== textRepresentation.rightParenthesis &&
-    prevChar !== textRepresentation.plus;
+  _isChangingOperatorProcess = (prevChar, newCharInfo) => {
+    const nonChangeableRoles = [
+      'number',
+      'delete',
+      'evaluation',
+      'separator-left',
+      'separator-right',
+    ];
+    const nonChangeablePrevChars = [
+      textRepresentation.percent,
+      textRepresentation.delete,
+      textRepresentation.leftParenthesis,
+      textRepresentation.rightParenthesis,
+      textRepresentation.plus,
+    ];
+
+    return (
+      prevChar &&
+      !this._charIsNumber(prevChar) &&
+      !nonChangeableRoles.includes(newCharInfo.role) &&
+      !nonChangeablePrevChars.includes(prevChar)
+    );
+  };
 
   _deleteSomeLastChars(n) {
     for (let i = 0; i < n; i += 1) {
