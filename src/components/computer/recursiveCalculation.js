@@ -9,7 +9,7 @@ export default function recursiveCalculation(expression) {
     }
 
     const arr = [...result];
-    const left = arr.lastIndexOf('(');
+    const left = arr.indexOf('(');
     const right = arr.indexOf(')', left);
 
     const innerExpression = arr.slice(left + 1, right).join('');

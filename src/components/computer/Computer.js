@@ -32,6 +32,15 @@ export default class Computer {
         case 'minus':
           this._recalculateWithNewChar(data.textContent);
           break;
+        case 'separator-left':
+          this._handleLeftParenthesis();
+          break;
+        case 'separator-right':
+          this._handleRightParenthesis();
+          break;
+        case 'percent':
+          this._handlePercent();
+          break;
         default:
           this._recalculateWithNewChar(data.textContent);
           break;
@@ -60,9 +69,9 @@ export default class Computer {
   _showFinalResult = () => {
     const fullExpression = this._normalizeExpression(this.expression.join(''));
     this.outputExpressionStream(
-      recursiveCalculation(fullExpression).toFixed(2)
+      recursiveCalculation(this._expandNegatives(fullExpression)).toFixed(2)
     );
-    this.outputResultStream(null);
+    this.outputResultStream(0);
     this._resetCalculatorMemory();
   };
 
@@ -78,6 +87,7 @@ export default class Computer {
   };
 
   _invertNumberSign = () => {
+    if (this.expression.length === 0) return;
     const lastNumberChars = [];
     let isMinusNow = false;
     let j = 1;
@@ -85,7 +95,9 @@ export default class Computer {
 
     while (
       this._charIsNumber(lastElement) ||
-      lastElement === textRepresentation.minus
+      lastElement === textRepresentation.minus ||
+      lastElement === textRepresentation.comma ||
+      lastElement === '.'
     ) {
       if (!(isMinusNow && lastElement !== textRepresentation.minus)) {
         lastNumberChars.push(lastElement);
@@ -97,7 +109,7 @@ export default class Computer {
       lastElement = this.expression[this.expression.length - j];
     }
 
-    lastElement = lastNumberChars.reverse().join('');
+    lastElement = lastNumberChars.reverse().join('').replace(',', '.');
 
     this._deleteSomeLastChars(lastNumberChars.length);
 
@@ -105,7 +117,12 @@ export default class Computer {
 
     if (
       invertedChar >= 0 &&
-      this.expression[this.expression.length - 1] !== textRepresentation.plus
+      this.expression.length !== 0 &&
+      this.expression[this.expression.length - 1] !== textRepresentation.plus &&
+      this.expression[this.expression.length - 1] !==
+        textRepresentation.multiplication &&
+      this.expression[this.expression.length - 1] !==
+        textRepresentation.leftParenthesis
     )
       this._pushCharInCalculatorMemory(textRepresentation.plus);
     this._recalculateWithNewChar(invertedChar);
@@ -116,13 +133,46 @@ export default class Computer {
   };
 
   _displayCurrentResult = (exp) => {
-    this.outputResultStream(recursiveCalculation(exp)?.toPrecision(3));
+    this.outputResultStream(
+      recursiveCalculation(this._expandNegatives(exp))?.toPrecision(3)
+    );
   };
 
   _recalculateWithNewChar = (char) => {
-    if (char) this._pushCharInCalculatorMemory(char);
+    if (char) {
+      if (
+        this.expression.length === 0 &&
+        !(
+          this._charIsNumber(char) ||
+          char === textRepresentation.minus ||
+          char === textRepresentation.leftParenthesis
+        )
+      ) {
+        return;
+      }
+      if (
+        char === '0' &&
+        this.expression.length === 1 &&
+        this.expression[this.expression.length - 1] === '0'
+      ) {
+        return;
+      }
+      if (
+        char === '0' &&
+        this.expression.length === 2 &&
+        this.expression[this.expression.length - 2] ===
+          textRepresentation.minus &&
+        this.expression[this.expression.length - 1] === '0'
+      ) {
+        return;
+      }
+
+      this._pushCharInCalculatorMemory(char);
+    }
 
     const fullExpression = this._normalizeExpression(this.expression.join(''));
+
+    this.expression = fullExpression.split('');
 
     this._displayCurrentExpression(fullExpression);
     this._displayCurrentResult(fullExpression);
@@ -144,7 +194,8 @@ export default class Computer {
     prevChar !== textRepresentation.percent &&
     prevChar !== textRepresentation.delete &&
     prevChar !== textRepresentation.leftParenthesis &&
-    prevChar !== textRepresentation.rightParenthesis;
+    prevChar !== textRepresentation.rightParenthesis &&
+    prevChar !== textRepresentation.plus;
 
   _deleteSomeLastChars(n) {
     for (let i = 0; i < n; i += 1) {
@@ -153,4 +204,47 @@ export default class Computer {
   }
 
   _charIsNumber = (char) => !Number.isNaN(Number(char));
+
+  _handleLeftParenthesis = () => {
+    this._recalculateWithNewChar(textRepresentation.leftParenthesis);
+  };
+
+  _handleRightParenthesis = () => {
+    if (
+      this._calculateCharOccurrenceInExpression(
+        textRepresentation.leftParenthesis
+      ) <=
+      this._calculateCharOccurrenceInExpression(
+        textRepresentation.rightParenthesis
+      )
+    )
+      return;
+
+    this._recalculateWithNewChar(textRepresentation.rightParenthesis);
+  };
+
+  _calculateCharOccurrenceInExpression = (char) => {
+    const expression = this.expression.join('');
+    const inititalLength = expression.length;
+    const lengthAfterDeletion = expression.replaceAll(char, '').length;
+    return inititalLength - lengthAfterDeletion;
+  };
+
+  _expandNegatives = (expression) =>
+    // transform statements like 3*(-3) to -3*3
+    expression
+      .replace(/(\d+)\s*×\s*\(-(\d+)\)/g, '-$1×$2')
+      .replace(/(\d+)\s*×\s*-(\d+)/g, '-$1×$2')
+      .replace(/(\d+)\s*÷\s*\(-(\d+)\)/g, '-$1÷$2')
+      .replace(/(\d+)\s*÷\s*-(\d+)/g, '-$1÷$2')
+      .replace(`${textRepresentation.minus}${textRepresentation.minus}`, '');
+
+  _handlePercent = () => {
+    if (
+      this.expression.length === 0 ||
+      this.expression[this.expression.length - 1] === textRepresentation.percent
+    )
+      return;
+    this._recalculateWithNewChar(textRepresentation.percent);
+  };
 }
