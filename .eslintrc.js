@@ -22,4 +22,9 @@ module.exports = {
       },
     },
   },
+  rules: {
+    'no-console': 'warn',
+    'no-underscore-dangle': 'off',
+    'class-methods-use-this': 'off',
+  },
 };
