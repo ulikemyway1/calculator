@@ -29,8 +29,12 @@ export default class Computer {
         case 'invert':
           this._invertNumberSign();
           break;
+        case 'minus':
+          this._recalculateWithNewChar(data.textContent);
+          break;
         default:
           this._recalculateWithNewChar(data.textContent);
+          break;
       }
     }
   };
@@ -117,6 +121,10 @@ export default class Computer {
     newCharInfo.role !== 'number' &&
     newCharInfo.role !== 'delete' &&
     newCharInfo.role !== 'evaluation' &&
+    newCharInfo.role !== 'separator-left' &&
+    newCharInfo.role !== 'separator-right' &&
     prevChar !== textRepresentation.percent &&
-    prevChar !== textRepresentation.delete;
+    prevChar !== textRepresentation.delete &&
+    prevChar !== textRepresentation.leftParenthesis &&
+    prevChar !== textRepresentation.rightParenthesis;
 }
