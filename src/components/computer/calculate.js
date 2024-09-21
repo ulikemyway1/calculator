@@ -55,11 +55,9 @@ export default function calculate(exp) {
         char === textRepresentation.division
       ) {
         currentOperator = char;
-
-        befotePercent = stack[stack.length - 1];
+        befotePercent = stack.reduce((a, b) => a + b);
       } else if (char === textRepresentation.percent) {
         stack.pop();
-
         if (befotePercent) {
           stack.push(befotePercent * (num / 100));
         } else {
