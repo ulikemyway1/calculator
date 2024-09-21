@@ -14,18 +14,24 @@ export default class Computer {
   }
 
   processInput = (data) => {
-    switch (data.role) {
-      case 'delete':
-        this._deleteLastCharFromExpression();
-        break;
-      case 'evaluation':
-        this._showFinalResult();
-        break;
-      case 'invert':
-        this._invertNumberSign();
-        break;
-      default:
-        this._recalculateWithNewChar(data.textContent);
+    const prevChar = this.expression[this.expression.length - 1];
+    if (this._isChangingOperatorProcess(prevChar, data)) {
+      this._deleteLastCharFromExpression();
+      this._recalculateWithNewChar(data.textContent);
+    } else {
+      switch (data.role) {
+        case 'delete':
+          this._deleteLastCharFromExpression();
+          break;
+        case 'evaluation':
+          this._showFinalResult();
+          break;
+        case 'invert':
+          this._invertNumberSign();
+          break;
+        default:
+          this._recalculateWithNewChar(data.textContent);
+      }
     }
   };
 
@@ -104,4 +110,13 @@ export default class Computer {
     this._getAndDeleteCharFromMemory();
     this._recalculateWithNewChar(null);
   };
+
+  _isChangingOperatorProcess = (prevChar, newCharInfo) =>
+    prevChar &&
+    Number.isNaN(Number(prevChar)) &&
+    newCharInfo.role !== 'number' &&
+    newCharInfo.role !== 'delete' &&
+    newCharInfo.role !== 'evaluation' &&
+    prevChar !== textRepresentation.percent &&
+    prevChar !== textRepresentation.delete;
 }
