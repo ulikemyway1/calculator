@@ -41,6 +41,9 @@ export default class Computer {
         case 'percent':
           this._handlePercent();
           break;
+        case 'comma':
+          this._handleComma();
+          break;
         default:
           this._recalculateWithNewChar(data.textContent);
           break;
@@ -88,10 +91,11 @@ export default class Computer {
 
   _invertNumberSign = () => {
     if (this.expression.length === 0) return;
+
     const lastNumberChars = [];
     let isMinusNow = false;
     let j = 1;
-    let lastElement = this.expression[this.expression.length - j];
+    let lastElement = this._getNumberFromTheEndAtPoistionN(j);
 
     while (
       this._charIsNumber(lastElement) ||
@@ -106,7 +110,7 @@ export default class Computer {
       }
       isMinusNow = lastElement === textRepresentation.minus;
       j += 1;
-      lastElement = this.expression[this.expression.length - j];
+      lastElement = this._getNumberFromTheEndAtPoistionN(j);
     }
 
     lastElement = lastNumberChars.reverse().join('').replace(',', '.');
@@ -118,10 +122,10 @@ export default class Computer {
     if (
       invertedChar >= 0 &&
       this.expression.length !== 0 &&
-      this.expression[this.expression.length - 1] !== textRepresentation.plus &&
-      this.expression[this.expression.length - 1] !==
+      this._getNumberFromTheEndAtPoistionN(1) !== textRepresentation.plus &&
+      this._getNumberFromTheEndAtPoistionN(1) !==
         textRepresentation.multiplication &&
-      this.expression[this.expression.length - 1] !==
+      this._getNumberFromTheEndAtPoistionN(1) !==
         textRepresentation.leftParenthesis
     )
       this._pushCharInCalculatorMemory(textRepresentation.plus);
@@ -134,7 +138,7 @@ export default class Computer {
 
   _displayCurrentResult = (exp) => {
     this.outputResultStream(
-      recursiveCalculation(this._expandNegatives(exp))?.toPrecision(3)
+      recursiveCalculation(this._expandNegatives(exp))?.toFixed(2)
     );
   };
 
@@ -153,16 +157,15 @@ export default class Computer {
       if (
         char === '0' &&
         this.expression.length === 1 &&
-        this.expression[this.expression.length - 1] === '0'
+        this._getNumberFromTheEndAtPoistionN(1) === '0'
       ) {
         return;
       }
       if (
         char === '0' &&
         this.expression.length === 2 &&
-        this.expression[this.expression.length - 2] ===
-          textRepresentation.minus &&
-        this.expression[this.expression.length - 1] === '0'
+        this._getNumberFromTheEndAtPoistionN(2) === textRepresentation.minus &&
+        this._getNumberFromTheEndAtPoistionN(1) === '0'
       ) {
         return;
       }
@@ -252,9 +255,18 @@ export default class Computer {
   _handlePercent = () => {
     if (
       this.expression.length === 0 ||
-      this.expression[this.expression.length - 1] === textRepresentation.percent
+      this._getNumberFromTheEndAtPoistionN(1) === textRepresentation.percent
     )
       return;
     this._recalculateWithNewChar(textRepresentation.percent);
   };
+
+  _handleComma = () => {
+    if (this._charIsNumber(this._getNumberFromTheEndAtPoistionN(1))) {
+      this._recalculateWithNewChar(textRepresentation.comma);
+    }
+  };
+
+  _getNumberFromTheEndAtPoistionN = (n) =>
+    this.expression[this.expression.length - n];
 }
