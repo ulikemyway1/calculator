@@ -126,7 +126,8 @@ export default class Computer {
       this._getNumberFromTheEndAtPoistionN(1) !==
         textRepresentation.multiplication &&
       this._getNumberFromTheEndAtPoistionN(1) !==
-        textRepresentation.leftParenthesis
+        textRepresentation.leftParenthesis &&
+      this._getNumberFromTheEndAtPoistionN(1) !== textRepresentation.division
     )
       this._pushCharInCalculatorMemory(textRepresentation.plus);
     this._recalculateWithNewChar(invertedChar);
@@ -169,6 +170,12 @@ export default class Computer {
       ) {
         return;
       }
+      if (
+        char === textRepresentation.plus &&
+        this._getNumberFromTheEndAtPoistionN(1) === textRepresentation.plus
+      ) {
+        return;
+      }
 
       this._pushCharInCalculatorMemory(char);
     }
@@ -199,7 +206,6 @@ export default class Computer {
       textRepresentation.delete,
       textRepresentation.leftParenthesis,
       textRepresentation.rightParenthesis,
-      textRepresentation.plus,
     ];
 
     return (
