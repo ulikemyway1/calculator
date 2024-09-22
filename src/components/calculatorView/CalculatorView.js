@@ -32,6 +32,7 @@ export default class CalculatorView {
     this.appendControlsButtons();
 
     this.setScreenExpressionText('0');
+    this.setScreenResultText('0');
 
     this.computer = new Computer({
       input: this.view,
@@ -62,7 +63,7 @@ export default class CalculatorView {
   };
 
   setScreenExpressionText = (text) => {
-    this.screenWithExpression.textContent = text;
+    this.screenWithExpression.textContent = text || '0';
   };
 
   setScreenResultText = (text) => {

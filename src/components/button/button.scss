@@ -1,0 +1,23 @@
+.calculator {
+  &__button {
+    font-size: 24px;
+    border-radius: 0;
+    border: none;
+    background-color: var(--dark-bg);
+    min-width: 70px;
+    min-height: 50px;
+    transition: filter 0.3s;
+    cursor: pointer;
+    color: var(--main-white);
+  }
+
+  &__button-special {
+    background-color: var(--accent-btn);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .calculator__button:hover {
+    filter: brightness(1.2);
+  }
+}

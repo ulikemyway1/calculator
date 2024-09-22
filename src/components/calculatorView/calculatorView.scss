@@ -5,57 +5,68 @@
   align-content: flex-start;
   margin: auto;
   width: 30vw;
-  height: 40dvw;
-  min-height: 400px;
-  max-height: 700px;
   min-width: 280px;
   max-width: 600px;
-  border: 1px solid var(--dark-bg);
+  border: 1px solid rgba(138, 138, 138, 0.75);
   border-radius: 15px;
   box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.75);
-  overflow: hidden;
+  user-select: none;
+  color: var(--main-white);
+  background-color: var(--main-dark);
 
   &__screen-expression,
   &__screen-result {
     display: flex;
+    flex-direction: row-reverse;
     font-size: 28px;
-    padding: 0 5px;
+    padding: 5px;
+    border: 5px solid var(--main-dark);
     align-items: center;
-    justify-content: flex-end;
+    text-align: right;
     height: 15%;
+    min-height: 15%;
     width: 100%;
-    border-bottom: 1px solid #000000;
+    overflow-x: auto;
+
+    &::-webkit-scrollbar {
+      height: 7px;
+    }
+
+    &::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 5px grey;
+      border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgb(70, 70, 70);
+      border-radius: 10px;
+    }
+  }
+
+  &__screen-expression {
+    padding-top: 15px;
+    border-radius: 10px;
+  }
+
+  &__screen-result {
+    padding-top: 10px;
+    border-top: 1px solid #a9a9a9;
   }
 
   &__buttons {
     display: grid;
-    padding: 5px;
+    padding-top: 10px;
     gap: 1px;
     width: 100%;
     height: 70%;
-
     grid-template-areas:
       'delete  invert percent division division'
       'number-7 number-8 number-9 multiplication multiplication'
       'number-4 number-5 number-6 minus minus'
       'number-1 number-2 number-3 plus plus'
-      'number number evaluation evaluation evaluation'
+      'number number number evaluation evaluation'
       'separator-left separator-left  separator-right separator-right comma';
-    border-radius: 15px;
+    border-radius: 13px;
     overflow: hidden;
-  }
-
-  &__button {
-    font-size: 24px;
-    border-radius: 0;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .calculator__button:hover {
-    background-color: beige;
   }
 }

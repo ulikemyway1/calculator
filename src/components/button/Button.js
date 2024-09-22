@@ -11,6 +11,10 @@ export default class Button {
 
     this.buttonView.style.gridArea = `${role}${value ? `-${value}` : ''}`;
 
+    if (role !== 'number') {
+      this.buttonView.classList.add('calculator__button-special');
+    }
+
     this.button = { value, role, textContent };
   }
 

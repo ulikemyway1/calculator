@@ -8,8 +8,17 @@
 
 body {
   display: flex;
+  flex-direction: column;
   min-height: 100dvh;
   align-items: center;
   justify-content: center;
   font-family: 'Poppins', 'Arial', sans-serif;
+  background-color: var(--night-body);
+}
+
+.container {
+  margin: 0 auto;
+  padding: 0 15px;
+  width: 100%;
+  max-width: 1400px;
 }
