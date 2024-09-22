@@ -15,7 +15,8 @@ body {
   justify-content: center;
   font-family: 'Poppins', 'Arial', sans-serif;
   background-color: var(--night-body);
-  transition: background-color 0.9s;
+  transition: background-color 1.2s;
+  overflow: hidden;
 }
 
 .container {

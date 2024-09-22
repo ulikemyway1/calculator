@@ -66,6 +66,16 @@ export default class Slider {
         ? this.textContentAfter
         : this.textContentBefore;
     });
+
+    this.switch.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const wave = createDOMElement({ tag: 'div', classList: ['wave-effect'] });
+      document.body.appendChild(wave);
+
+      wave.addEventListener('animationend', (ee) => {
+        ee.target.remove();
+      });
+    });
   };
 
   getSlider = () => this.wrapper;

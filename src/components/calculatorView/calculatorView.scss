@@ -13,6 +13,7 @@
   user-select: none;
   color: var(--main-white);
   background-color: var(--main-dark);
+  transition: all 0.3s;
 
   &__screen-expression,
   &__screen-result {
@@ -27,7 +28,7 @@
     min-height: 15%;
     width: 100%;
     overflow-x: auto;
-    transition: all;
+    transition: all 0.3s;
 
     &::-webkit-scrollbar {
       height: 7px;
