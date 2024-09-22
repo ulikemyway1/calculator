@@ -275,4 +275,9 @@ export default class Computer {
 
   _getNumberFromTheEndAtPoistionN = (n) =>
     this.expression[this.expression.length - n];
+
+  reset = () => {
+    this.expression = [];
+    this.result = [];
+  };
 }

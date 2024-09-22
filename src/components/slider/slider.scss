@@ -3,9 +3,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: var(--main-white);
   width: min-content;
   font-weight: 600;
+  color: inherit;
 }
 .slider-container {
   width: 51px;
@@ -19,11 +19,16 @@
   position: absolute;
 }
 
+.slider-checkbox:focus + .slider-switch {
+  outline: 2px solid var(--accent-btn);
+}
+
 .slider-switch {
   width: 100%;
   height: 100%;
   display: block;
   background-color: #e9e9eb;
+  outline: 1px solid var(--main-dark);
   border-radius: 16px;
   cursor: pointer;
   transition: all 0.2s ease-out;

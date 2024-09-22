@@ -1,5 +1,6 @@
 @import url('./_fonts.scss');
 @import url('./_colors.scss');
+@import url('./_themes.scss');
 * {
   margin: 0;
   padding: 0;
@@ -14,11 +15,15 @@ body {
   justify-content: center;
   font-family: 'Poppins', 'Arial', sans-serif;
   background-color: var(--night-body);
+  transition: background-color 0.9s;
 }
 
 .container {
+  display: flex;
+  gap: 20px;
   margin: 0 auto;
   padding: 0 15px;
   width: 100%;
   max-width: 1400px;
+  color: inherit;
 }

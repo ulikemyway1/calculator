@@ -1,5 +1,6 @@
 import createDOMElement from '../../helpers/createDOMElement';
 import './button.scss';
+import { textRepresentation } from './buttonsSet';
 
 export default class Button {
   constructor({ textContent, value, role }) {
@@ -13,6 +14,13 @@ export default class Button {
 
     if (role !== 'number') {
       this.buttonView.classList.add('calculator__button-special');
+    }
+
+    if (
+      textContent === textRepresentation.leftParenthesis ||
+      textContent === textRepresentation.rightParenthesis
+    ) {
+      this.buttonView.classList.add('calculator__button-parenthesis');
     }
 
     this.button = { value, role, textContent };

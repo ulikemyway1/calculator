@@ -69,4 +69,15 @@ export default class CalculatorView {
   setScreenResultText = (text) => {
     this.screenWithResult.textContent = text;
   };
+
+  turnProMode = () => {
+    this.view.classList.toggle('pro-mode');
+    this.setScreenExpressionText('0');
+    this.setScreenResultText('0');
+    this.computer.reset();
+  };
+
+  switchTheme = () => {
+    this.view.classList.toggle('light-theme');
+  };
 }

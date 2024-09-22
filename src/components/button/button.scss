@@ -6,12 +6,26 @@
     background-color: var(--dark-bg);
     min-width: 70px;
     min-height: 50px;
-    transition: filter 0.3s;
+    transition:
+      filter 0.3s,
+      background-color 0.3s,
+      color 0.3s;
     cursor: pointer;
     color: var(--main-white);
   }
 
   &__button-special {
+    background-color: var(--accent-btn);
+  }
+}
+
+.calculator.light-theme {
+  .calculator__button {
+    background-color: var(--main-white);
+    color: var(--night-body);
+  }
+
+  .calculator__button-special {
     background-color: var(--accent-btn);
   }
 }
