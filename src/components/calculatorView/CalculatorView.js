@@ -76,8 +76,4 @@ export default class CalculatorView {
     this.setScreenResultText('0');
     this.computer.reset();
   };
-
-  switchTheme = () => {
-    this.view.classList.toggle('light-theme');
-  };
 }

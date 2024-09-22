@@ -1,0 +1,68 @@
+.color-picker {
+  position: relative;
+
+  &__button {
+    padding: 10px 15px;
+    background-color: var(--accent-btn);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  &__modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: none;
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      gap: 60px;
+      align-items: center;
+      margin-bottom: 10px;
+      text-align: left;
+    }
+  }
+
+  &__description {
+    width: 160px;
+  }
+}
+
+.color-input {
+  width: 60px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modal__close-button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  font-size: 24px;
+  font-weight: 600;
+  background-color: var(--green-btn);
+  color: var(--light-body);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: filter 0.3s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .modal__close-button:hover,
+  .color-picker__button:hover {
+    filter: brightness(1.1);
+  }
+}

@@ -1,5 +1,6 @@
 import createDOMElement from '../../helpers/createDOMElement';
 import Slider from '../slider/Slider';
+import ColorPicker from '../colorPicker/ColorPicker';
 import './settingsBar.scss';
 
 export default class SettingsBar {
@@ -15,11 +16,14 @@ export default class SettingsBar {
       callBack: callbackSwitchTheme,
     });
 
+    this.colorPicker = new ColorPicker();
+
     this._createUI();
 
     this.container.append(
       this.modeControl.getSlider(),
-      this.themeControl.getSlider()
+      this.themeControl.getSlider(),
+      this.colorPicker.getView()
     );
   }
 

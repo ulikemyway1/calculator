@@ -72,7 +72,7 @@ export default class Computer {
   _showFinalResult = () => {
     const fullExpression = this._normalizeExpression(this.expression.join(''));
     this.outputExpressionStream(
-      recursiveCalculation(this._expandNegatives(fullExpression)).toFixed(2)
+      recursiveCalculation(this._expandNegatives(fullExpression)).toPrecision(4)
     );
     this.outputResultStream(0);
     this._resetCalculatorMemory();
@@ -139,7 +139,7 @@ export default class Computer {
 
   _displayCurrentResult = (exp) => {
     this.outputResultStream(
-      recursiveCalculation(this._expandNegatives(exp))?.toFixed(2)
+      recursiveCalculation(this._expandNegatives(exp))?.toPrecision(4)
     );
   };
 

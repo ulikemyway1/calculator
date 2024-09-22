@@ -3,7 +3,7 @@
     font-size: 24px;
     border-radius: 0;
     border: none;
-    background-color: var(--dark-bg);
+    background-color: var(--button-bg-color);
     min-width: 70px;
     min-height: 50px;
     transition:
@@ -11,22 +11,11 @@
       background-color 0.3s,
       color 0.3s;
     cursor: pointer;
-    color: var(--main-white);
+    color: var(--current-calc-font-color);
   }
 
   &__button-special {
-    background-color: var(--accent-btn);
-  }
-}
-
-.calculator.light-theme {
-  .calculator__button {
-    background-color: var(--main-white);
-    color: var(--night-body);
-  }
-
-  .calculator__button-special {
-    background-color: var(--accent-btn);
+    background-color: var(--special-button-bg-color);
   }
 }
 
