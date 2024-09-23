@@ -39,6 +39,7 @@ export default class CalculatorView {
       outputExpression: this.setScreenExpressionText,
       outputResult: this.setScreenResultText,
     });
+
   }
 
   appendChildElement(element) {
@@ -76,4 +77,5 @@ export default class CalculatorView {
     this.setScreenResultText('0');
     this.computer.reset();
   };
+
 }

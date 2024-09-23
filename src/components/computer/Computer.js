@@ -1,5 +1,5 @@
-import recursiveCalculation from './recursiveCalculation';
 import { textRepresentation } from '../button/buttonsSet';
+import calculate from './calculate';
 
 export default class Computer {
   constructor({ input, outputExpression, outputResult }) {
@@ -60,10 +60,7 @@ export default class Computer {
   };
 
   _normalizeExpression = (expression) =>
-    expression
-      .replaceAll(')(', `)${textRepresentation.multiplication}()`)
-      .replaceAll(/(\d|\))\(/g, `$1${textRepresentation.multiplication}(`)
-      .replaceAll('()', '');
+    expression.replaceAll(textRepresentation.comma, '.');
 
   _getAndDeleteCharFromMemory = () => {
     this.expression.pop();
@@ -71,11 +68,18 @@ export default class Computer {
 
   _showFinalResult = () => {
     const fullExpression = this._normalizeExpression(this.expression.join(''));
-    this.outputExpressionStream(
-      recursiveCalculation(this._expandNegatives(fullExpression)).toPrecision(4)
-    );
+    const calculatedResult = calculate(this._expandNegatives(fullExpression));
+
+    this.outputExpressionStream(this._replaceNaN(calculatedResult));
     this.outputResultStream(0);
     this._resetCalculatorMemory();
+  };
+
+  _replaceNaN = (exp) => {
+    if (typeof exp === 'number' && !Number.isNaN(exp)) {
+      return exp.toPrecision(4);
+    }
+    return 0;
   };
 
   _resetCalculatorMemory = () => {
@@ -91,6 +95,18 @@ export default class Computer {
 
   _invertNumberSign = () => {
     if (this.expression.length === 0) return;
+
+    if (
+      this.expression.length === 1 &&
+      this._charIsNumber(this.expression[0])
+    ) {
+      const currentNumber = this.expression[0];
+      const invertedNumber = (-Number(currentNumber)).toString();
+      this.expression[0] = invertedNumber;
+      this._displayCurrentExpression(this.expression.join(''));
+      this._displayCurrentResult(this.expression.join(''));
+      return;
+    }
 
     const lastNumberChars = [];
     let isMinusNow = false;
@@ -130,7 +146,7 @@ export default class Computer {
       this._getNumberFromTheEndAtPoistionN(1) !== textRepresentation.division
     )
       this._pushCharInCalculatorMemory(textRepresentation.plus);
-    this._recalculateWithNewChar(invertedChar);
+    this._recalculateWithNewChar(invertedChar.toString());
   };
 
   _displayCurrentExpression = (exp) => {
@@ -138,9 +154,7 @@ export default class Computer {
   };
 
   _displayCurrentResult = (exp) => {
-    this.outputResultStream(
-      recursiveCalculation(this._expandNegatives(exp))?.toPrecision(4)
-    );
+    this.outputResultStream(this._replaceNaN(calculate(exp)));
   };
 
   _recalculateWithNewChar = (char) => {
