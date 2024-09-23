@@ -6,19 +6,27 @@ export default class Slider {
     textContentBefore,
     textContentAfter = textContentBefore,
     callBack,
+    wave = false,
   }) {
     this.checked = false;
     this.textContentBefore = textContentBefore;
     this.textContentAfter = textContentAfter;
+    this.callBack = callBack;
     this.span = createDOMElement({
       tag: 'span',
       classList: ['slider-text'],
       textContent: this.textContentBefore,
     });
 
+    this.wave = wave;
+
     this._createUI(textContentBefore);
 
     this._addToggleListener(callBack);
+
+    this._addStateListner();
+
+    this._loadSavedState();
   }
 
   _createUI = (textContentBefore) => {
@@ -67,6 +75,10 @@ export default class Slider {
         : this.textContentBefore;
     });
 
+    if (this.wave) this._addWaveEffect();
+  };
+
+  _addWaveEffect = () => {
     this.switch.addEventListener('click', (e) => {
       e.stopPropagation();
       const wave = createDOMElement({ tag: 'div', classList: ['wave-effect'] });
@@ -76,6 +88,30 @@ export default class Slider {
         ee.target.remove();
       });
     });
+  };
+
+  _addStateListner = () => {
+    this.checkbox.addEventListener('change', this._saveState);
+  };
+
+  _saveState = () => {
+    localStorage.setItem(this.checkbox.id, this.checked);
+  };
+
+  _loadSavedState = () => {
+    const savedState = localStorage.getItem(this.checkbox.id);
+    const savedCustomColors = localStorage.getItem('saved-colors');
+    if (
+      (savedState && !savedCustomColors) ||
+      (savedState && this.id !== 'slider-checkbox-PRO')
+    ) {
+      this.checked = savedState === 'true';
+      this.span.textContent = this.checked
+        ? this.textContentAfter
+        : this.textContentBefore;
+      this.checkbox.checked = this.checked;
+      if (this.checked) this.callBack();
+    }
   };
 
   getSlider = () => this.wrapper;

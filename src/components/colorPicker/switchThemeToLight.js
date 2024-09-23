@@ -1,4 +1,8 @@
 const switchThemeToLight = () => {
+  if (localStorage.getItem('saved-colors')) {
+    localStorage.removeItem('saved-colors');
+  }
+
   document.body.classList.toggle('light-theme');
   document.documentElement.style.removeProperty('--special-button-bg-color');
   if (document.body.classList.contains('light-theme')) {

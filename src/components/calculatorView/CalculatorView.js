@@ -40,6 +40,7 @@ export default class CalculatorView {
       outputResult: this.setScreenResultText,
     });
 
+    this._applyCustomColors();
   }
 
   appendChildElement(element) {
@@ -78,4 +79,12 @@ export default class CalculatorView {
     this.computer.reset();
   };
 
+  _applyCustomColors() {
+    const savedColors = JSON.parse(localStorage.getItem('saved-colors'));
+    if (savedColors) {
+      Object.entries(savedColors).forEach(([key, value]) => {
+        document.documentElement.style.setProperty(key, value);
+      });
+    }
+  }
 }

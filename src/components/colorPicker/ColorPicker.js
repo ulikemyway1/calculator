@@ -76,27 +76,32 @@ export default class ColorPicker {
     switch (type) {
       case 'body':
         document.documentElement.style.setProperty('--body-bg-color', color);
+        this._saveInLocalStorage('--body-bg-color', color);
         break;
       case 'calculator':
         document.documentElement.style.setProperty(
           '--calculator-bg-color',
           color
         );
+        this._saveInLocalStorage('--calculator-bg-color', color);
         break;
       case 'buttons':
         document.documentElement.style.setProperty('--button-bg-color', color);
+        this._saveInLocalStorage('--button-bg-color', color);
         break;
       case 'special-buttons':
         document.documentElement.style.setProperty(
           '--special-button-bg-color',
           color
         );
+        this._saveInLocalStorage('--special-button-bg-color', color);
         break;
       case 'font-color':
         document.documentElement.style.setProperty(
           '--current-calc-font-color',
           color
         );
+        this._saveInLocalStorage('--current-calc-font-color', color);
         break;
       default:
         break;
@@ -120,6 +125,17 @@ export default class ColorPicker {
   _closeModal = () => {
     this.modal.style.display = 'none';
   };
+
+  _saveInLocalStorage(name, value) {
+    const savedColors = localStorage.getItem('saved-colors');
+    if (savedColors) {
+      const savedColorsObject = JSON.parse(savedColors);
+      savedColorsObject[name] = value;
+      localStorage.setItem('saved-colors', JSON.stringify(savedColorsObject));
+    } else {
+      localStorage.setItem('saved-colors', JSON.stringify({ [name]: value }));
+    }
+  }
 
   getView() {
     return this.view;

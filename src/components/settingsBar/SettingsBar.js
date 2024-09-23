@@ -14,6 +14,7 @@ export default class SettingsBar {
       textContentBefore: 'Dark',
       textContentAfter: 'Light',
       callBack: callbackSwitchTheme,
+      wave: true,
     });
 
     this.colorPicker = new ColorPicker();
