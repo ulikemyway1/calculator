@@ -15,7 +15,7 @@ export default class Computer {
 
   processInput = (data) => {
     const prevChar = this.expression[this.expression.length - 1];
-    if (this._isChangingOperatorProcess(prevChar, data)) {
+    if (this._isChangingOperatorProcess(prevChar, data) && data.textContent) {
       this._deleteLastCharFromExpression();
       this._recalculateWithNewChar(data.textContent);
     } else {
@@ -94,7 +94,11 @@ export default class Computer {
   };
 
   _invertNumberSign = () => {
-    if (this.expression.length === 0) return;
+    if (
+      this.expression.length === 0 ||
+      !this._charIsNumber(this._getNumberFromTheEndAtPoistionN(1))
+    )
+      return;
 
     if (
       this.expression.length === 1 &&
@@ -214,6 +218,7 @@ export default class Computer {
       'evaluation',
       'separator-left',
       'separator-right',
+      'invert',
     ];
     const nonChangeablePrevChars = [
       textRepresentation.percent,
@@ -247,9 +252,11 @@ export default class Computer {
       this._calculateCharOccurrenceInExpression(
         textRepresentation.leftParenthesis
       ) <=
-      this._calculateCharOccurrenceInExpression(
-        textRepresentation.rightParenthesis
-      )
+        this._calculateCharOccurrenceInExpression(
+          textRepresentation.rightParenthesis
+        ) ||
+      (!this._charIsNumber(this._getNumberFromTheEndAtPoistionN(1)) &&
+        this._getNumberFromTheEndAtPoistionN(1) !== textRepresentation.percent)
     )
       return;
 
@@ -275,7 +282,9 @@ export default class Computer {
   _handlePercent = () => {
     if (
       this.expression.length === 0 ||
-      this._getNumberFromTheEndAtPoistionN(1) === textRepresentation.percent
+      this._getNumberFromTheEndAtPoistionN(1) === textRepresentation.percent ||
+      this._getNumberFromTheEndAtPoistionN(1) ===
+        textRepresentation.leftParenthesis
     )
       return;
     this._recalculateWithNewChar(textRepresentation.percent);
