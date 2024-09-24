@@ -5,7 +5,7 @@ const textRepresentation = {
   multiplication: '×',
   percent: '%',
   evaluation: '=',
-  delete: '⭠',
+  delete: '←',
   invert: '±',
   comma: ',',
   leftParenthesis: '(',
