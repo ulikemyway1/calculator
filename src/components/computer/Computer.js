@@ -102,29 +102,33 @@ export default class Computer {
   };
 
   _invertNumberSign = () => {
+    // Return if the expression is empty or if the last character is not a number
     if (
       this.expression.length === 0 ||
-      !this._charIsNumber(this._getNumberFromTheEndAtPoistionN(1))
+      !this._charIsNumber(this._getCharFromTheEndAtPoistionN(1))
     )
       return;
 
+    // If the expression consists of a single number, invert its sign directly
     if (
       this.expression.length === 1 &&
       this._charIsNumber(this.expression[0])
     ) {
       const currentNumber = this.expression[0];
-      const invertedNumber = (-Number(currentNumber)).toString();
-      this.expression[0] = invertedNumber;
-      this._displayCurrentExpression(this.expression.join(''));
-      this._displayCurrentResult(this.expression.join(''));
+      const invertedNumber = (-Number(currentNumber)).toString(); // Invert the number
+      this.expression[0] = invertedNumber; // Update the expression with the inverted number
+      this._displayCurrentExpression(this.expression.join('')); // Display updated expression
+      this._displayCurrentResult(this.expression.join('')); // Display result
       return;
     }
 
+    // For multi-digit numbers, extract the last number from the expression
     const lastNumberChars = [];
-    let isMinusNow = false;
+    let isMinusNow = false; // Track if the current number has a minus sign
     let j = 1;
-    let lastElement = this._getNumberFromTheEndAtPoistionN(j);
+    let lastElement = this._getCharFromTheEndAtPoistionN(j); // Get the last character of the expression
 
+    // Loop to collect the characters of the last number, handling minus signs and decimal points
     while (
       this._charIsNumber(lastElement) ||
       lastElement === textRepresentation.minus ||
@@ -132,32 +136,40 @@ export default class Computer {
       lastElement === '.'
     ) {
       if (!(isMinusNow && lastElement !== textRepresentation.minus)) {
-        lastNumberChars.push(lastElement);
+        lastNumberChars.push(lastElement); // Add characters to the last number array
       } else if (isMinusNow && this._charIsNumber(lastElement)) {
-        break;
+        break; // Exit loop if a minus sign is followed by a number
       }
-      isMinusNow = lastElement === textRepresentation.minus;
+      isMinusNow = lastElement === textRepresentation.minus; // Check if the last element is a minus sign
       j += 1;
-      lastElement = this._getNumberFromTheEndAtPoistionN(j);
+      lastElement = this._getCharFromTheEndAtPoistionN(j); // Get the next character
     }
 
+    // Join the collected characters to form the number and convert commas to dots (for decimals)
     lastElement = lastNumberChars.reverse().join('').replace(',', '.');
 
+    // Delete the old number from the expression
     this._deleteSomeLastChars(lastNumberChars.length);
 
+    // Invert the number's sign
     const invertedChar = Number(lastElement) * -1;
 
+    // If the inverted number is positive and the expression ends with an operator,
+    // add a plus sign to maintain the correct format
     if (
       invertedChar >= 0 &&
       this.expression.length !== 0 &&
-      this._getNumberFromTheEndAtPoistionN(1) !== textRepresentation.plus &&
-      this._getNumberFromTheEndAtPoistionN(1) !==
+      this._getCharFromTheEndAtPoistionN(1) !== textRepresentation.plus &&
+      this._getCharFromTheEndAtPoistionN(1) !==
         textRepresentation.multiplication &&
-      this._getNumberFromTheEndAtPoistionN(1) !==
+      this._getCharFromTheEndAtPoistionN(1) !==
         textRepresentation.leftParenthesis &&
-      this._getNumberFromTheEndAtPoistionN(1) !== textRepresentation.division
-    )
-      this._pushCharInCalculatorMemory(textRepresentation.plus);
+      this._getCharFromTheEndAtPoistionN(1) !== textRepresentation.division
+    ) {
+      this._pushCharInCalculatorMemory(textRepresentation.plus); // Add a plus sign if needed
+    }
+
+    // Recalculate the expression with the new inverted number
     this._recalculateWithNewChar(invertedChar.toString());
   };
 
@@ -170,7 +182,9 @@ export default class Computer {
   };
 
   _recalculateWithNewChar = (char) => {
+    // Check if char is provided
     if (char) {
+      // If expression is empty and the new char is not a number, a minus sign, or a left parenthesis, return early
       if (
         this.expression.length === 0 &&
         !(
@@ -181,35 +195,57 @@ export default class Computer {
       ) {
         return;
       }
+
+      // Prevent adding leading zero if the current expression is just '0'
       if (
         char === '0' &&
         this.expression.length === 1 &&
-        this._getNumberFromTheEndAtPoistionN(1) === '0'
+        this._getCharFromTheEndAtPoistionN(1) === '0'
       ) {
         return;
       }
+
+      // Prevent adding negative zero if the expression starts with '-0'
       if (
         char === '0' &&
         this.expression.length === 2 &&
-        this._getNumberFromTheEndAtPoistionN(2) === textRepresentation.minus &&
-        this._getNumberFromTheEndAtPoistionN(1) === '0'
-      ) {
-        return;
-      }
-      if (
-        char === textRepresentation.plus &&
-        this._getNumberFromTheEndAtPoistionN(1) === textRepresentation.plus
+        this._getCharFromTheEndAtPoistionN(2) === textRepresentation.minus &&
+        this._getCharFromTheEndAtPoistionN(1) === '0'
       ) {
         return;
       }
 
+      // Prevent adding two consecutive plus signs or adding a plus sign after an open parenthesis
+      if (
+        char === textRepresentation.plus &&
+        (this._getCharFromTheEndAtPoistionN(1) === textRepresentation.plus ||
+          this._getCharFromTheEndAtPoistionN(1) ===
+            textRepresentation.leftParenthesis)
+      ) {
+        return;
+      }
+
+      // Prevent multiplication or division immediately after an open parenthesis
+      if (
+        (char === textRepresentation.multiplication ||
+          char === textRepresentation.division) &&
+        this._getCharFromTheEndAtPoistionN(1) ===
+          textRepresentation.leftParenthesis
+      ) {
+        return;
+      }
+
+      // Push the valid char into the calculator memory
       this._pushCharInCalculatorMemory(char);
     }
 
+    // Normalize the full expression to handle any necessary format adjustments
     const fullExpression = this._normalizeExpression(this.expression.join(''));
 
+    // Update the expression with the normalized version
     this.expression = fullExpression.split('');
 
+    // Display the current expression and result
     this._displayCurrentExpression(fullExpression);
     this._displayCurrentResult(fullExpression);
   };
@@ -227,6 +263,7 @@ export default class Computer {
       'separator-left',
       'separator-right',
       'invert',
+      'comma',
     ];
     const nonChangeablePrevChars = [
       textRepresentation.percent,
@@ -266,8 +303,8 @@ export default class Computer {
 
     if (
       rightParenthesisMoreThanLeft ||
-      (!this._charIsNumber(this._getNumberFromTheEndAtPoistionN(1)) &&
-        this._getNumberFromTheEndAtPoistionN(1) !== textRepresentation.percent)
+      (!this._charIsNumber(this._getCharFromTheEndAtPoistionN(1)) &&
+        this._getCharFromTheEndAtPoistionN(1) !== textRepresentation.percent)
     )
       return;
 
@@ -293,8 +330,8 @@ export default class Computer {
   _handlePercent = () => {
     if (
       this.expression.length === 0 ||
-      this._getNumberFromTheEndAtPoistionN(1) === textRepresentation.percent ||
-      this._getNumberFromTheEndAtPoistionN(1) ===
+      this._getCharFromTheEndAtPoistionN(1) === textRepresentation.percent ||
+      this._getCharFromTheEndAtPoistionN(1) ===
         textRepresentation.leftParenthesis
     )
       return;
@@ -303,24 +340,24 @@ export default class Computer {
 
   _handleComma = () => {
     if (
-      this._charIsNumber(this._getNumberFromTheEndAtPoistionN(1)) &&
+      this._charIsNumber(this._getCharFromTheEndAtPoistionN(1)) &&
       !this._hasDelimeterInThisNumber()
     ) {
       this._recalculateWithNewChar(textRepresentation.comma);
     }
   };
 
-  _getNumberFromTheEndAtPoistionN = (n) =>
+  _getCharFromTheEndAtPoistionN = (n) =>
     this.expression[this.expression.length - n];
 
   _hasDelimeterInThisNumber = () => {
     const chars = [];
     let i = 1;
     while (
-      this._charIsNumber(this._getNumberFromTheEndAtPoistionN(i)) ||
-      this._getNumberFromTheEndAtPoistionN(i) === '.'
+      this._charIsNumber(this._getCharFromTheEndAtPoistionN(i)) ||
+      this._getCharFromTheEndAtPoistionN(i) === '.'
     ) {
-      chars.push(this._getNumberFromTheEndAtPoistionN(i));
+      chars.push(this._getCharFromTheEndAtPoistionN(i));
       i += 1;
     }
     return chars.includes('.');
