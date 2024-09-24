@@ -15,7 +15,11 @@ export default class Computer {
 
   processInput = (data) => {
     const prevChar = this.expression[this.expression.length - 1];
-    if (this._isChangingOperatorProcess(prevChar, data) && data.textContent) {
+    if (
+      this._isChangingOperatorProcess(prevChar, data) &&
+      data.textContent &&
+      data.role !== 'reset'
+    ) {
       this._deleteLastCharFromExpression();
       this._recalculateWithNewChar(data.textContent);
     } else {
@@ -43,6 +47,9 @@ export default class Computer {
           break;
         case 'comma':
           this._handleComma();
+          break;
+        case 'reset':
+          this.reset();
           break;
         default:
           this._recalculateWithNewChar(data.textContent);
@@ -302,5 +309,7 @@ export default class Computer {
   reset = () => {
     this.expression = [];
     this.result = [];
+    this.outputExpressionStream(0);
+    this.outputResultStream(0);
   };
 }

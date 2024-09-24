@@ -41,6 +41,8 @@ export default class CalculatorView {
     });
 
     this._applyCustomColors();
+
+    this._appendFillerToButtons();
   }
 
   appendChildElement(element) {
@@ -86,5 +88,13 @@ export default class CalculatorView {
         document.documentElement.style.setProperty(key, value);
       });
     }
+  }
+
+  _appendFillerToButtons() {
+    const filler = createDOMElement({
+      tag: 'div',
+      classList: ['calculator__filler'],
+    });
+    this.buttonsSet.append(filler);
   }
 }

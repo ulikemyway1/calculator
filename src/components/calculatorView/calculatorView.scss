@@ -62,11 +62,11 @@
     width: 100%;
     height: 70%;
     grid-template-areas:
-      'delete  invert percent division division'
-      'number-7 number-8 number-9 multiplication multiplication'
-      'number-4 number-5 number-6 minus minus'
-      'number-1 number-2 number-3 plus plus'
-      'number number comma evaluation evaluation';
+      'reset invert percent delete delete'
+      'number-7 number-8 number-9 multiplication division'
+      'number-4 number-5 number-6 minus plus'
+      'number-1 number-2 number-3 comma evaluation'
+      'number number number filler filler';
     border-bottom-left-radius: 13px;
     border-bottom-right-radius: 13px;
     overflow: hidden;
@@ -76,17 +76,22 @@
   &__button-parenthesis {
     display: none;
   }
+
+  &__filler {
+    grid-area: filler;
+    background-color: var(--calculator-bg-color);
+  }
 }
 
 .calculator.pro-mode {
   .calculator__buttons {
     grid-template-areas:
-      'delete  invert percent division division'
-      'number-7 number-8 number-9 multiplication multiplication'
-      'number-4 number-5 number-6 minus minus'
-      'number-1 number-2 number-3 plus plus'
-      'number number number evaluation evaluation'
-      'separator-left separator-left  separator-right separator-right comma';
+      'reset invert percent delete delete'
+      'number-7 number-8 number-9 multiplication division'
+      'number-4 number-5 number-6 minus plus'
+      'number-1 number-2 number-3 separator-left separator-right'
+      'number number number comma comma'
+      'filler filler filler evaluation evaluation';
   }
 
   .calculator__button-parenthesis {

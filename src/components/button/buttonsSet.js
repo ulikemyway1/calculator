@@ -5,11 +5,12 @@ const textRepresentation = {
   multiplication: '×',
   percent: '%',
   evaluation: '=',
-  delete: 'AC',
+  delete: '⭠',
   invert: '±',
   comma: ',',
   leftParenthesis: '(',
   rightParenthesis: ')',
+  reset: 'AC',
 };
 const buttonsSet = [
   {
@@ -116,6 +117,11 @@ const buttonsSet = [
     textContent: textRepresentation.rightParenthesis,
     value: null,
     role: 'separator-right',
+  },
+  {
+    textContent: textRepresentation.reset,
+    value: null,
+    role: 'reset',
   },
 ];
 
