@@ -135,6 +135,11 @@ export default class ColorPicker {
     } else {
       localStorage.setItem('saved-colors', JSON.stringify({ [name]: value }));
     }
+    this._resetPreparedTheme();
+  }
+
+  _resetPreparedTheme() {
+    localStorage.removeItem('slider-checkbox-Dark');
   }
 
   getView() {
