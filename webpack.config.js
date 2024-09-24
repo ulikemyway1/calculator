@@ -35,6 +35,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       title: 'Calculator',
+      favicon: './src/favicon.png',
     }),
     new ESLintPlugin(),
   ],
