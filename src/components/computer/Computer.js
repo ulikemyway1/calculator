@@ -302,13 +302,29 @@ export default class Computer {
   };
 
   _handleComma = () => {
-    if (this._charIsNumber(this._getNumberFromTheEndAtPoistionN(1))) {
+    if (
+      this._charIsNumber(this._getNumberFromTheEndAtPoistionN(1)) &&
+      !this._hasDelimeterInThisNumber()
+    ) {
       this._recalculateWithNewChar(textRepresentation.comma);
     }
   };
 
   _getNumberFromTheEndAtPoistionN = (n) =>
     this.expression[this.expression.length - n];
+
+  _hasDelimeterInThisNumber = () => {
+    const chars = [];
+    let i = 1;
+    while (
+      this._charIsNumber(this._getNumberFromTheEndAtPoistionN(i)) ||
+      this._getNumberFromTheEndAtPoistionN(i) === '.'
+    ) {
+      chars.push(this._getNumberFromTheEndAtPoistionN(i));
+      i += 1;
+    }
+    return chars.includes('.');
+  };
 
   reset = () => {
     this.expression = [];
