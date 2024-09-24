@@ -42,6 +42,7 @@ export default class Button {
     const buttonEvent = new CustomEvent('inputChanged', {
       detail: this.button,
     });
+
     this.buttonView.addEventListener('click', () =>
       target.dispatchEvent(buttonEvent)
     );

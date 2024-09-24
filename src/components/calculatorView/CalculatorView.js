@@ -3,6 +3,7 @@ import './calculatorView.scss';
 import { buttonsSet } from '../button/buttonsSet';
 import Button from '../button/Button';
 import Computer from '../computer/Computer';
+import KeyListener from '../keyListener/KeyListener';
 
 export default class CalculatorView {
   constructor() {
@@ -43,6 +44,8 @@ export default class CalculatorView {
     this._applyCustomColors();
 
     this._appendFillerToButtons();
+
+    this._addKeyListener();
   }
 
   appendChildElement(element) {
@@ -96,5 +99,9 @@ export default class CalculatorView {
       classList: ['calculator__filler'],
     });
     this.buttonsSet.append(filler);
+  }
+
+  _addKeyListener() {
+    this.keyListener = new KeyListener(this.view);
   }
 }
