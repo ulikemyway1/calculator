@@ -74,6 +74,7 @@ export default class Computer {
   };
 
   _showFinalResult = () => {
+    if (this.expression.length === 0) return;
     const fullExpression = this._normalizeExpression(this.expression.join(''));
     const calculatedResult = calculate(this._expandNegatives(fullExpression));
 
@@ -255,13 +256,16 @@ export default class Computer {
   };
 
   _handleRightParenthesis = () => {
-    if (
+    const rightParenthesisMoreThanLeft =
       this._calculateCharOccurrenceInExpression(
         textRepresentation.leftParenthesis
       ) <=
-        this._calculateCharOccurrenceInExpression(
-          textRepresentation.rightParenthesis
-        ) ||
+      this._calculateCharOccurrenceInExpression(
+        textRepresentation.rightParenthesis
+      );
+
+    if (
+      rightParenthesisMoreThanLeft ||
       (!this._charIsNumber(this._getNumberFromTheEndAtPoistionN(1)) &&
         this._getNumberFromTheEndAtPoistionN(1) !== textRepresentation.percent)
     )
